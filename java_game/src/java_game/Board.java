@@ -33,7 +33,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // initialize the game state
         player = new Player();
-        coins = populateCoins();
+        coins = populateCoins(NUM_COINS);
 
         // this timer will call the actionPerformed() method every DELAY ms
         timer = new Timer(DELAY, this);
@@ -144,14 +144,14 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         g2d.drawString(text, x, y);
     }
 
-    private ArrayList<Coin> populateCoins() {
+    private ArrayList<Coin> populateCoins(int num) {
         ArrayList<Coin> coinList = new ArrayList<>();
         Random rand = new Random();
 
         // create the given number of coins in random positions on the board.
         // note that there is not check here to prevent two coins from occupying the same
         // spot, nor to prevent coins from spawning in the same spot as the player
-        for (int i = 0; i < NUM_COINS; i++) {
+        for (int i = 0; i < num; i++) {
             int coinX = rand.nextInt(COLUMNS);
             int coinY = rand.nextInt(ROWS);
             coinList.add(new Coin(coinX, coinY));
@@ -163,12 +163,15 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     private void collectCoins() {
         // allow player to pickup coins
         ArrayList<Coin> collectedCoins = new ArrayList<>();
-        for (Coin coin : coins) {
+        for (int i = 0; i < coins.size(); i++) {
+        	Coin coin = coins.get(i);
             // if the player is on the same tile as a coin, collect it
             if (player.getPos().equals(coin.getPos())) {
                 // give the player some points for picking this up
                 player.addScore(100);
                 collectedCoins.add(coin);
+                ArrayList<Coin> newCoins = populateCoins(1);
+                coins.add(newCoins.get(0));
             }
         }
         // remove collected coins from the board
