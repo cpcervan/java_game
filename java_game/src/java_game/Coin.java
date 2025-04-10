@@ -13,6 +13,10 @@ public class Coin {
     private BufferedImage image;
     // current position of the coin on the board grid
     private Point pos;
+    
+    private int tickCount = 0;
+    
+    private static final int DISSAPPEAR_SECONDS = 5;
 
     public Coin(int x, int y) {
         // load the assets
@@ -43,6 +47,15 @@ public class Coin {
             pos.y * Board.TILE_SIZE, 
             observer
         );
+    }
+    
+    public void tick() {
+    	tickCount++;
+    }
+    
+    public boolean isGone() {
+    	int neededTicks = (int)(1000*DISSAPPEAR_SECONDS/Board.getDelay() + 0.5);
+    	return tickCount == neededTicks;
     }
 
     public Point getPos() {

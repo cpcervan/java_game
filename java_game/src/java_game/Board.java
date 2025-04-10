@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Board extends JPanel implements ActionListener, KeyListener {
 
     // controls the delay between each tick in ms
-    private final int DELAY = 25;
+    private static final int DELAY = 25;
     // controls the size of the board
     public static final int TILE_SIZE = 50;
     public static final int ROWS = 12;
@@ -172,10 +172,21 @@ public class Board extends JPanel implements ActionListener, KeyListener {
                 collectedCoins.add(coin);
                 ArrayList<Coin> newCoins = populateCoins(1);
                 coins.add(newCoins.get(0));
-            }
+            } else
+            	coin.tick();
+            	if (coin.isGone())
+            		collectedCoins.add(coin);
         }
         // remove collected coins from the board
         coins.removeAll(collectedCoins);
+    }
+    
+    /** 
+     * Returns the board tick delay (in ms)
+     * @return the integer delay
+     */
+    public static int getDelay() {
+    	return DELAY;
     }
 
 }
