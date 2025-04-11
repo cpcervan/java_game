@@ -24,6 +24,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     // objects that appear on the game board
     private Player player;
     private ArrayList<Coin> coins;
+    private int delay = 5;
+    private int tickCount = 0;
 
     public Board() {
         // set the game board size
@@ -51,13 +53,26 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // give the player points for collecting coins
         collectCoins();
+        
+        //
+        generateCoins();
 
         // calling repaint() will trigger paintComponent() to run again,
         // which will refresh/redraw the graphics.
         repaint();
     }
 
-    @Override
+    private void generateCoins() {
+		tickCount++;
+		if (tickCount == (int)(1000*delay/timer.getDelay() + 0.5)) {
+			coins.addAll(populateCoins(1));
+			tickCount = 0;
+			Random rand = new Random();
+			delay = rand.nextInt(2,5);
+		}
+	}
+
+	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         // when calling g.drawImage() we can use "this" for the ImageObserver 
@@ -168,7 +183,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             // if the player is on the same tile as a coin, collect it
             if (player.getPos().equals(coin.getPos())) {
                 // give the player some points for picking this up
-                player.addScore(100);
+                player.addScore(coin.getValue());
                 collectedCoins.add(coin);
                 ArrayList<Coin> newCoins = populateCoins(1);
                 coins.add(newCoins.get(0));
